@@ -63,6 +63,7 @@ function App() {
     }
   }, [data]);
 
+
   function searchResults(e) {
     e.preventDefault();
     const searchValue = e.target[0].value;
@@ -147,68 +148,72 @@ function App() {
       {/* news cards */}
       <div className="flex bg-[#0F172A] m-auto flex-wrap w-100 justify-center gap-5 content-center min-h-screen">
         {isSuccess ? (
-          data.articles.map((article, index) => {
-            let isFavorite = false;
+          data?.articles?.length == 0 ? (
+            <div className="text-white">No data found</div>
+          ) : (
+            data.articles.map((article, index) => {
+              let isFavorite = false;
 
-            if (favoriteArticles[article.title]) isFavorite = true;
-            return (
-              <div
-                key={index}
-                className="newsCard m-4 p-4 rounded-lg w-72 shrink-0 text-white flex flex-col gap-3" //bg-gray-500
-              >
-                <h1 className="text-xl font-bold line-clamp-2">
-                  {article.title}
-                </h1>
-                <img
-                  src={article.urlToImage || "/assets/generic-news-img.jpeg"}
-                  alt=""
-                  className="w-30 "
-                />
-                <p className=" line-clamp-5">{article.description}</p>
-                {/* readmore button */}
-                <div className="newsCardFooter flex justify-between items-center align-end mt-auto">
-                  <button
-                    className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => {
-                      navigate("/content?title=" + article.title);
-                    }}
-                  >
-                    {" "}
-                    Read More
-                  </button>
-                  <div className="fav bg-gray-100 w-10 h-10 flex justify-center items-center rounded">
-                    {isFavorite ? (
-                      <img
-                        src="/assets/liked.svg"
-                        alt=""
-                        onClick={() => {
-                          delete favoriteArticles[article.title];
-                          localStorage.setItem(
-                            "favorite",
-                            JSON.stringify(favoriteArticles)
-                          );
-                          setLocalFavorite(favoriteArticles);
-                        }}
-                      />
-                    ) : (
-                      <img
-                        src="/assets/like.svg"
-                        alt=""
-                        onClick={() => {
-                          favoriteArticles[article.title] = article;
-                          localStorage.setItem(
-                            "favorite",
-                            JSON.stringify(favoriteArticles)
-                          );
-                          setLocalFavorite(favoriteArticles);
-                        }}
-                      />
-                    )}
+              if (favoriteArticles[article.title]) isFavorite = true;
+              return (
+                <div
+                  key={index}
+                  className="newsCard m-4 p-4 rounded-lg w-72 shrink-0 text-white flex flex-col gap-3" //bg-gray-500
+                >
+                  <h1 className="text-xl font-bold line-clamp-2">
+                    {article.title}
+                  </h1>
+                  <img
+                    src={article.urlToImage || "/assets/generic-news-img.jpeg"}
+                    alt=""
+                    className="w-30 "
+                  />
+                  <p className=" line-clamp-5">{article.description}</p>
+                  {/* readmore button */}
+                  <div className="newsCardFooter flex justify-between items-center align-end mt-auto">
+                    <button
+                      className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => {
+                        navigate("/content?title=" + article.title);
+                      }}
+                    >
+                      {" "}
+                      Read More
+                    </button>
+                    <div className="fav bg-gray-100 w-10 h-10 flex justify-center items-center rounded">
+                      {isFavorite ? (
+                        <img
+                          src="/assets/liked.svg"
+                          alt=""
+                          onClick={() => {
+                            delete favoriteArticles[article.title];
+                            localStorage.setItem(
+                              "favorite",
+                              JSON.stringify(favoriteArticles)
+                            );
+                            setLocalFavorite(favoriteArticles);
+                          }}
+                        />
+                      ) : (
+                        <img
+                          src="/assets/like.svg"
+                          alt=""
+                          onClick={() => {
+                            favoriteArticles[article.title] = article;
+                            localStorage.setItem(
+                              "favorite",
+                              JSON.stringify(favoriteArticles)
+                            );
+                            setLocalFavorite(favoriteArticles);
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })
+              );
+            })
+          )
         ) : (
           <ReactLoading
             className="absolute top-[50vh] left-[50vw]"
@@ -227,10 +232,9 @@ function App() {
             onClick={() => {
               //if current page is 1 return
               if (currentPage <= 1) return;
-          
+
               //if current page is greater than start pagination + 3 then decrease start pagination by 1
               if (currentPage < startPagination + 3 && startPagination > 0) {
-           
                 setStartPagination((prev1) => prev1 - 1);
               }
               //decrease current page by 1
