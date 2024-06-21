@@ -63,7 +63,6 @@ function App() {
     }
   }, [data]);
 
-
   function searchResults(e) {
     e.preventDefault();
     const searchValue = e.target[0].value;
@@ -227,9 +226,11 @@ function App() {
           <div
             onClick={() => {
               //if current page is 1 return
-              if (currentPage === 1) return;
+              if (currentPage <= 1) return;
+              console.log(currentPage, startPagination);
               //if current page is greater than start pagination + 3 then decrease start pagination by 1
-              if (currentPage < startPagination + 3) {
+              if (currentPage < startPagination + 3 && startPagination > 0) {
+           
                 setStartPagination((prev1) => prev1 - 1);
               }
               //decrease current page by 1

@@ -8,7 +8,6 @@ const articlesSlice=createSlice({
     },
     reducers: {
         addArticles: (state,action) => {
-
             for (let i=0; i<action.payload.length; i++) {
                 state.articles[action.payload[i].title]=action.payload[i];
             }

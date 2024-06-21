@@ -12,4 +12,6 @@ const api=createApi({
 });
 
 export default  api;
+
+// The useGetArticlesQuery hook is used to fetch articles from the API.
 export const { useGetArticlesQuery }=api;
