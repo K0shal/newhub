@@ -8,7 +8,7 @@ const ContentDetail = () => {
   const data = useSelector((state) => state.articles);
 
   //articles from redux store
-  const articles = data.articles;
+  const articles = data?.articles;
 
   //useLocation to get query parameter
   let { search } = useLocation();
@@ -24,19 +24,21 @@ const ContentDetail = () => {
   const navigate = useNavigate();
 
   //get url of the article with title= title  from query parameter
-  const url = articles[title].url;
+  const url = articles[title]?.url;
 
   //get article from articles with title= title from query parameter
-  const article = articles[title];
+
+  let article = articles && articles[title];
+  if (article) localStorage.setItem("article", JSON.stringify(article));
+  else article = JSON.parse(localStorage.getItem("article"));
 
   //fetch content from url
   useEffect(() => {
     axios
-      .get("http://localhost:8000/content" + "?url=" + url)
+      .get("http://localhost:8000/content" + "?url=" + article?.url)
       .then((res) => setContent(res.data.data))
       .catch((err) => setContent(null));
   }, [url]);
-  
 
   return (
     <div className="singleArticleContainer bg-[#0F172A] w-100 min-h-screen text-white p-10 flex flex-col gap-10">
@@ -54,24 +56,24 @@ const ContentDetail = () => {
         <div className="articleMetaData flex flex-col gap-5 justify-between items-start sm:flex-row sm:items-center">
           <div className="info flex flex-col gap-3">
             <span className="text-gray-400 text-sm">
-              Published On: {article.publishedAt.toString().slice(0, 10)}
+              Published On: {article?.publishedAt?.toString().slice(0, 10)}
             </span>
             <span className="text-gray-400 text-sm">
-              Published By: {article.author}
+              Published By: {article?.author}
             </span>
           </div>
           <button
             className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
             onClick={() => {
-              window.open(article.url, "_blank");
+              window.open(article?.url, "_blank");
             }}
           >
             Read Original
           </button>
         </div>
 
-        <img src={article.urlToImage} alt="" />
-        <h4>{article.description}</h4>
+        <img src={article?.urlToImage} alt="" />
+        <h4>{article?.description}</h4>
         <p className="text-xl">{content}</p>
         {content == null && (
           <p className="text-orange-500">
