@@ -30,8 +30,9 @@ const ContentDetail = () => {
 
   let article = articles && articles[title];
   //delete content from article object
-  if (article) localStorage.setItem("article", JSON.stringify(article));
-  else article = JSON.parse(localStorage.getItem("article"));
+  // if (article) localStorage.setItem("article", JSON.stringify(article));
+  if(!article)
+   article = JSON.parse(localStorage.getItem("article"));
 
   //fetch content from url
   useEffect(() => {
@@ -40,7 +41,7 @@ const ContentDetail = () => {
         .get(`${import.meta.env.VITE_API_BASE_URL}/content?url=` + article?.url)
         .then((res) => {
           setContent(res.data.data);
-          localStorage.setItem("article", JSON.stringify({...article,fullContent:res.data.data}));
+          localStorage.setItem("article", JSON.stringify({fullContent:res.data.data,...article}));
         })
         .catch((err) => {
           console.log(err);
