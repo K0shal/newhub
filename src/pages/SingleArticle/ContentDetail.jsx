@@ -28,7 +28,7 @@ const ContentDetail = () => {
 
   //get article from articles with title= title from query parameter
 
-  let article = articles && articles[title];
+  let article = articles && {...articles[title]};
   //delete content from article object
   if (article) localStorage.setItem("article", JSON.stringify(article));
   else article = JSON.parse(localStorage.getItem("article"));
@@ -43,7 +43,10 @@ const ContentDetail = () => {
           article.fullContent = res.data.data;
           localStorage.setItem("article", JSON.stringify(article));
         })
-        .catch((err) => setContent(null));
+        .catch((err) => {
+          console.log(err);
+          setContent(null)
+        });
   }, [url]);
 
   return (
