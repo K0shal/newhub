@@ -35,7 +35,7 @@ const ContentDetail = () => {
   //fetch content from url
   useEffect(() => {
     axios
-      .get("http://localhost:8000/content" + "?url=" + article?.url)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/content" + "?url=` + article?.url)
       .then((res) => setContent(res.data.data))
       .catch((err) => setContent(null));
   }, [url]);
