@@ -28,7 +28,7 @@ const ContentDetail = () => {
 
   //get article from articles with title= title from query parameter
 
-  let article = articles && {...articles[title]};
+  let article = articles && articles[title];
   //delete content from article object
   if (article) localStorage.setItem("article", JSON.stringify(article));
   else article = JSON.parse(localStorage.getItem("article"));
@@ -40,8 +40,7 @@ const ContentDetail = () => {
         .get(`${import.meta.env.VITE_API_BASE_URL}/content?url=` + article?.url)
         .then((res) => {
           setContent(res.data.data);
-          article.fullContent = res.data.data;
-          localStorage.setItem("article", JSON.stringify(article));
+          localStorage.setItem("article", JSON.stringify({...article,fullContent:res.data.data}));
         })
         .catch((err) => {
           console.log(err);
