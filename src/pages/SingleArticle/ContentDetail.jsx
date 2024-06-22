@@ -8,7 +8,7 @@ const ContentDetail = () => {
   const data = useSelector((state) => state.articles);
 
   //articles from redux store
-  const articles = data?.articles;
+  let articles = data?.articles;
 
   //useLocation to get query parameter
   let { search } = useLocation();
@@ -29,15 +29,21 @@ const ContentDetail = () => {
   //get article from articles with title= title from query parameter
 
   let article = articles && articles[title];
+  //delete content from article object
   if (article) localStorage.setItem("article", JSON.stringify(article));
   else article = JSON.parse(localStorage.getItem("article"));
 
   //fetch content from url
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}/content?url=` + article?.url)
-      .then((res) => setContent(res.data.data))
-      .catch((err) => setContent(null));
+    if (!article?.fullContent)
+      axios
+        .get(`${import.meta.env.VITE_API_BASE_URL}/content?url=` + article?.url)
+        .then((res) => {
+          setContent(res.data.data);
+          article.fullContent = res.data.data;
+          localStorage.setItem("article", JSON.stringify(article));
+        })
+        .catch((err) => setContent(null));
   }, [url]);
 
   return (
@@ -52,7 +58,7 @@ const ContentDetail = () => {
         &gt; <span>Article</span> &gt;
       </div>
       <div className="articleData flex flex-col gap-10 sm:p-10">
-        <h2 className="text-4xl">{article.title}</h2>
+        <h2 className="text-4xl">{article?.title}</h2>
         <div className="articleMetaData flex flex-col gap-5 justify-between items-start sm:flex-row sm:items-center">
           <div className="info flex flex-col gap-3">
             <span className="text-gray-400 text-sm">
@@ -74,7 +80,9 @@ const ContentDetail = () => {
 
         <img src={article?.urlToImage} alt="" />
         <h4>{article?.description}</h4>
-        <p className="text-xl">{content}</p>
+        <p className="text-xl">
+          {article?.fullContent ? article?.fullContent : content}
+        </p>
         {content == null && (
           <p className="text-orange-500">
             "Couldn't fetch article. Try, if original source is available."
