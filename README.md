@@ -10,7 +10,7 @@
 
 ### Try it online on 
 
-You can play with these demo projects in your browser, without installing anything on your machine.
+
 
 - [app demo](https://6676495ab32e3b4db87778cf--majestic-choux-019405.netlify.app)
 
